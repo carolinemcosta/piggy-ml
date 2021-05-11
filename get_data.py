@@ -35,5 +35,6 @@ def load_pig_data(data_path=LOCAL_PATH, file_name=FILE_NAME):
         Pandas DataFrame with data read from the CSV file
   '''  
   csv_file = os.path.join(data_path, file_name)
+  
   return pd.read_csv(csv_file) # return Pandas dataframe
   
