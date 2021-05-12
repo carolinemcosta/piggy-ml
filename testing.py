@@ -2,22 +2,28 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 from get_data import fetch_pig_data
 from get_data import load_pig_data
 from training_set import split_train_test_pig
 from prepare_data import prepare_pig_binary
+from evaluate_model import evaluate_classifier
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import QuantileTransformer
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import svm
+from sklearn.linear_model import SGDClassifier
+
 
 from sklearn.metrics import mean_squared_error
 
 def main():
   
   train_data, train_labels, test_data, test_labels = prepare_pig_binary()
+  feature_names = ["AMP","DVDT","ARI"]
   
   #train_data.hist(bins=50)
   #plt.show()
@@ -39,23 +45,23 @@ def main():
   prepared_train_data = qnorm_minmax_data
   prepared_train_labels = np.ravel(train_labels.to_numpy())
 
-  # train random forest classifier 
+  # random forest classifier 
+  print("\nRANDOM FOREST CLASSIFIER\n")
   rnd_clf = RandomForestClassifier()
   rnd_clf.fit(prepared_train_data, prepared_train_labels)
+  evaluate_classifier(rnd_clf, prepared_train_data, prepared_train_labels, feature_names, rnd_clf.feature_importances_)
   
-  # try on some traning set data
-  some_data = prepared_train_data[:10]
-  some_labels = prepared_train_labels[:10]
+  # linear SVM classifier
+  print("\nLINEAR SVM CLASSIFIER\n")
+  lsv_clf = svm.SVC(kernel='linear')
+  lsv_clf.fit(prepared_train_data, prepared_train_labels)  
+  evaluate_classifier(lsv_clf, prepared_train_data, prepared_train_labels, feature_names, [])
   
-  print("Predictions:", rnd_clf.predict(some_data))
-  print("Labels:", some_labels)
-  
-  # evaluate
-  pig_predictions = rnd_clf.predict(prepared_train_data)
-  rnd_mse = mean_squared_error(prepared_train_labels, pig_predictions)
-  rnd_rmse = np.sqrt(rnd_mse)
-  print("Root mean square error:", rnd_rmse) # probably overfitting!!!
-  
+  # Stochastic CG classifier
+  print("\nSTOCHASTIC GD CLASSIFIER\n")
+  sgd_clf = SGDClassifier(random_state=42)
+  sgd_clf.fit(prepared_train_data, prepared_train_labels)  
+  evaluate_classifier(sgd_clf, prepared_train_data, prepared_train_labels, feature_names, [])  
   
   
 if __name__== "__main__":
