@@ -8,7 +8,8 @@ def evaluate_classifier(clf, data, labels, feature_names, feature_importances):
         clf (Object): instance of the classifier
         data (Numpy ND array): the data used for training
         labels (Numpy 1D array): the labels used for training
-        
+        feature_names (List): list of strings with feature names 
+        feature_importances (List): list with features importances - only available for some classifiers like Random Forest
       Returns:
         Prints results on the screen
   '''    
