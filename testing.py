@@ -44,24 +44,30 @@ def main():
   # select scaled data and prepare labels
   prepared_train_data = qnorm_minmax_data
   prepared_train_labels = np.ravel(train_labels.to_numpy())
+  
+  # plot data before and after feature scaling
+  pd.DataFrame(train_data, columns=feature_names).hist(bins=50)
+  plt.show()
+  pd.DataFrame(prepared_train_data, columns=feature_names).hist(bins=50)
+  plt.show()
 
-  # random forest classifier 
-  print("\nRANDOM FOREST CLASSIFIER\n")
-  rnd_clf = RandomForestClassifier()
-  rnd_clf.fit(prepared_train_data, prepared_train_labels)
-  evaluate_classifier(rnd_clf, prepared_train_data, prepared_train_labels, feature_names, rnd_clf.feature_importances_)
+  ## random forest classifier 
+  #print("\nRANDOM FOREST CLASSIFIER\n")
+  #rnd_clf = RandomForestClassifier()
+  #rnd_clf.fit(prepared_train_data, prepared_train_labels)
+  #evaluate_classifier(rnd_clf, prepared_train_data, prepared_train_labels, feature_names, rnd_clf.feature_importances_)
   
-  # linear SVM classifier
-  print("\nLINEAR SVM CLASSIFIER\n")
-  lsv_clf = svm.SVC(kernel='linear')
-  lsv_clf.fit(prepared_train_data, prepared_train_labels)  
-  evaluate_classifier(lsv_clf, prepared_train_data, prepared_train_labels, feature_names, [])
+  ## linear SVM classifier
+  #print("\nLINEAR SVM CLASSIFIER\n")
+  #lsv_clf = svm.SVC(kernel='linear')
+  #lsv_clf.fit(prepared_train_data, prepared_train_labels)  
+  #evaluate_classifier(lsv_clf, prepared_train_data, prepared_train_labels, feature_names, [])
   
-  # Stochastic CG classifier
-  print("\nSTOCHASTIC GD CLASSIFIER\n")
-  sgd_clf = SGDClassifier(random_state=42)
-  sgd_clf.fit(prepared_train_data, prepared_train_labels)  
-  evaluate_classifier(sgd_clf, prepared_train_data, prepared_train_labels, feature_names, [])  
+  ## Stochastic CG classifier
+  #print("\nSTOCHASTIC GD CLASSIFIER\n")
+  #sgd_clf = SGDClassifier(random_state=42)
+  #sgd_clf.fit(prepared_train_data, prepared_train_labels)  
+  #evaluate_classifier(sgd_clf, prepared_train_data, prepared_train_labels, feature_names, [])  
   
   
 if __name__== "__main__":
