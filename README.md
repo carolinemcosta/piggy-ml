@@ -15,8 +15,8 @@ To get an sense of the data and how different models behave, the initial strateg
 The dataset includes several data points from the same individual, thus, the testing set should contain all data points from at least one pig. Since we  have 6 pigs, we randomnly selected one pig to be the testing set, and included data from the remaining pigs in the training set.
 
 ## Feature scaling
-Many machine learning models do not handle data with different scales well. 
+Inspection of the distributions of the 3 features, as shown in Figure 1-A), reveals that these have different scales and that **AMP** and **DVDT** are tail-heavy. Many machine learning models do not handle data with different scales well and tail-heavy distributions may make models less accurate. Thus, the data was transformed to have a normal distribution and the values were scaled to be within 0 and 1. This was done using the **QuantileTransformer** and the **MinMaxScaler** from scikit-learn. The resuling distributions are shown in Figure 1-B).
+
 ## Choosing a machine learning model
-## Results
 
 # Improving the model
