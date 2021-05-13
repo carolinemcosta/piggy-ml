@@ -25,6 +25,7 @@ def evaluate_classifier(clf, data, labels, feature_names, feature_importances):
   rnd_mse = mean_squared_error(some_labels, some_predictions)
   rnd_rmse = np.sqrt(rnd_mse)
   print("Root mean square error:", rnd_rmse)
+  print("Score:", clf.score(some_data, some_labels))
   
   # feature importances: not all classifiers have this
   if len(feature_importances) > 0:
