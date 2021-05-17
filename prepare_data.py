@@ -20,10 +20,10 @@ def prepare_pig():
   train_set, test_set = split_train_test_pig(pig_data, 0.2)
 
   # split into data and labels
-  train_data = train_set[["AMP","DVDT","ARI"]]
+  train_data = train_set[["PIG","AMP","DVDT","ARI"]]
   train_labels = train_set[["TAG"]]
 
-  test_data = test_set[["AMP","DVDT","ARI"]]
+  test_data = test_set[["PIG","AMP","DVDT","ARI"]]
   test_labels = test_set[["TAG"]]
   
   return train_data, train_labels, test_data, test_labels
@@ -31,6 +31,7 @@ def prepare_pig():
 def prepare_pig_binary():  
   # get data and labels separately
   train_data, train_labels, test_data, test_labels = prepare_pig()
+  #print(train_data.head())
   
   # make labels binary: scar = 1 and healthy = 0
   train_labels[train_labels==2] = 0
