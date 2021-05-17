@@ -53,7 +53,7 @@ def main():
   prepared_test_labels = np.ravel(test_labels.to_numpy())  
   
   # split data for grouped k-fold cross validation
-  for splits in range(1,5):
+  for splits in range(2,6):
     print(splits)
     gkf = GroupKFold(n_splits=splits)
     pignames = train_data.PIG
