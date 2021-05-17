@@ -8,17 +8,14 @@ Other features of the electricals signals have been investigated, such as the du
 # The dataset
 The dataset consists of intra-cardiac electrograms obtained from six pigs, where tissue damaged was artificially induced. An average of 4,000 electrograms were recorded from each pig, thus, the dataset comprises of multiple data points from the same individuals. The signals were pre-processed and analysed to compute features, namely, the signal amplitude **(AMP)**, the activation-recovery interval **(ARI)**, and the maximum downslope of the signal **(DVDT)**. Cardiac magnetic resonance images were also obtained from these pigs and used to classify tissue as healthy or damaged using image-processing techniques. This image-based classification was mapped onto the electrogram data and is used in this project as our gold-standard, or **target**.
 
-# Initial strategy
-To get an sense of the data and how different models behave, the initial strategy was to divide the data into a training and a testing dataset, apply some feature scaling techniques to prepare the data for the models, and to try different models.
-
-## Training and testing sets
+# Training and testing sets
 The dataset includes several data points from the same individual, thus, the testing set should contain all data points from at least one pig. Since we  have 6 pigs, we randomnly selected one pig to be the testing set, and included data from the remaining pigs in the training set.
 
-## Feature scaling
+# Feature scaling
 Inspection of the distributions of the 3 features, as shown in the figure below (top row), reveals that these have different scales and that **AMP** and **DVDT** are tail-heavy. Many machine learning models do not handle data with different scales well and tail-heavy distributions may make models less accurate. Thus, the data was transformed to have a normal distribution and the values were scaled to be within 0 and 1. This was done using the **QuantileTransformer** and the **MinMaxScaler** from scikit-learn. The resuling distributions are shown in the figure (bottom row).
 
 ![feature_scaling](https://user-images.githubusercontent.com/81109384/118011576-1c5ff500-b348-11eb-997b-f899da7e27fb.png)
 
-## Choosing a machine learning model
+# Training machine learning models
 
 # Improving the model
