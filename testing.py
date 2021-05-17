@@ -22,8 +22,10 @@ from sklearn.metrics import plot_roc_curve
 
 from sklearn.model_selection import GroupKFold
 from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GridSearchCV
 
 def main():
+  # TODO: Try a different number of splits, boosting, and different kernels.
   
   train_data, train_labels, test_data, test_labels = prepare_pig_binary()
   feature_names = ["AMP","DVDT","ARI"]
@@ -51,49 +53,56 @@ def main():
   prepared_test_labels = np.ravel(test_labels.to_numpy())  
   
   # split data for grouped k-fold cross validation
-  gkf = GroupKFold(n_splits=5)
-  pignames = train_data.PIG
-  #scoring = ['precision', 'recall', 'roc_auc', 'f1']
-  #scoring = ['accuracy', 'roc_auc']
-  scoring = ['roc_auc']
+  for splits in range(1,5):
+    print(splits)
+    gkf = GroupKFold(n_splits=splits)
+    pignames = train_data.PIG
+    #scoring = ['precision', 'recall', 'roc_auc', 'f1']
+    scoring = ['accuracy', 'roc_auc']
+    
+    # random forest classifier 
+    print("\nRANDOM FOREST CLASSIFIER\n")
+    rnd_clf = RandomForestClassifier()
+    param_grid = [{'n_estimators': [10,100,100], 'max_features': [1,2,3]}, 
+                  {'bootstrap':[False], 'n_estimators': [10,100,1000], 'max_features': [1,2,3]}]
+    tuned_rnd_clf = GridSearchCV(rnd_clf, param_grid,scoring=scoring, refit='roc_auc', cv=gkf, return_train_score=True)
+    tuned_rnd_clf.fit(prepared_train_data, prepared_train_labels, groups=pignames)
+    print(tuned_rnd_clf.best_params_)
+    scores = cross_validate(tuned_rnd_clf.best_estimator_, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
+    print("ROC AUC:", np.mean(scores['test_roc_auc']))
+    print("Accuracy:", np.mean(scores['test_accuracy']))
+    
+    # SVM classifier
+    print("\nSVM CLASSIFIER\n")
+    lsv_clf = svm.SVC()
+    param_grid = [{'kernel':('linear', 'poly'), 'C':[0.1, 1, 10]}]
+    tuned_lsv_clf = GridSearchCV(lsv_clf, param_grid,scoring=scoring, refit='roc_auc', cv=gkf, return_train_score=True)
+    tuned_lsv_clf.fit(prepared_train_data, prepared_train_labels, groups=pignames)
+    print(tuned_lsv_clf.best_params_)
+    scores = cross_validate(tuned_lsv_clf.best_estimator_, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
+    print("ROC AUC:", np.mean(scores['test_roc_auc']))
+    print("Accuracy:", np.mean(scores['test_accuracy']))
 
-  #for train, test in gkf.split(prepared_train_data, train_labels, groups=pignames):
-    #print("%s %s" % (train, test))
+  ##lsv_clf.fit(prepared_train_data, prepared_train_labels)  
+  ##evaluate_classifier(lsv_clf, prepared_train_data, prepared_train_labels, feature_names, [])
+  #scores = cross_validate(lsv_clf, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
+  #print("ROC AUC:", np.mean(scores['test_roc_auc']))
   
-  # random forest classifier 
-  print("\nRANDOM FOREST CLASSIFIER\n")
-  rnd_clf = RandomForestClassifier()
-  #rnd_clf.fit(prepared_train_data, prepared_train_labels)
-  #evaluate_classifier(rnd_clf, prepared_train_data, prepared_train_labels, feature_names, rnd_clf.feature_importances_)
-  scores = cross_validate(rnd_clf, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
-  #print("Precision:", np.mean(scores['test_precision']))
-  #print("Recall:", np.mean(scores['test_recall']))
-  #print("Accuracy:", np.mean(scores['test_accuracy']))
-  print("ROC AUC:", np.mean(scores['test_roc_auc']))
-  #print("f1:", np.mean(scores['test_f1']))
-  
-  # linear SVM classifier
-  print("\nLINEAR SVM CLASSIFIER\n")
-  lsv_clf = svm.SVC(kernel='linear')
-  #lsv_clf.fit(prepared_train_data, prepared_train_labels)  
-  #evaluate_classifier(lsv_clf, prepared_train_data, prepared_train_labels, feature_names, [])
-  scores = cross_validate(lsv_clf, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
-  #print("Accuracy:", np.mean(scores['test_accuracy']))
-  print("ROC AUC:", np.mean(scores['test_roc_auc']))
-  
-  ## Stochastic CG classifier
-  print("\nSTOCHASTIC GD CLASSIFIER\n")
-  sgd_clf = SGDClassifier(random_state=42)
-  #sgd_clf.fit(prepared_train_data, prepared_train_labels)  
-  #evaluate_classifier(sgd_clf, prepared_train_data, prepared_train_labels, feature_names, [])  
-  scores = cross_validate(sgd_clf, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
-  #print("Accuracy:", np.mean(scores['test_accuracy']))
-  print("ROC AUC:", np.mean(scores['test_roc_auc']))
+  ### Stochastic CG classifier
+  #print("\nSTOCHASTIC GD CLASSIFIER\n")
+  #sgd_clf = SGDClassifier(random_state=42)
+  ##sgd_clf.fit(prepared_train_data, prepared_train_labels)  
+  ##evaluate_classifier(sgd_clf, prepared_train_data, prepared_train_labels, feature_names, [])  
+  #scores = cross_validate(sgd_clf, prepared_train_data, prepared_train_labels, scoring=scoring, cv=gkf, groups=pignames, return_train_score=True)
+  ##print("Accuracy:", np.mean(scores['test_accuracy']))
+  #print("ROC AUC:", np.mean(scores['test_roc_auc']))
 
 
   # evaluate models on test set
   #plot_roc_curve(rnd_clf, prepared_test_data, prepared_test_labels)  
   #plt.show()
+  
+  
   ## plot data before and after feature scaling
   #plt.rcParams['font.size'] = '16'
   #fig, axs = plt.subplots(2,3)
