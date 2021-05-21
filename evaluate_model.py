@@ -1,34 +1,37 @@
-from sklearn.metrics import mean_squared_error
 import numpy as np
 
-def evaluate_classifier(clf, data, labels, feature_names, feature_importances):
-  ''' Evaluates a trained classifier using the training set
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GridSearchCV
+
+def evaluate_classifier(clf, param_grid, scoring, refit, splits, data, labels, groups):
+  ''' Tune hyperparameters and evaluate model with cross validation
       
       Parameters: 
         clf (Object): instance of the classifier
+        param_grid: dictionary defining search space
+        scoring: list of metrics for evaluation
+        refit: metric to use when re-fitting the model. Can be a string or 'False' if not refitting.
+        splits: object with splits for cross validation
         data (Numpy ND array): the data used for training
         labels (Numpy 1D array): the labels used for training
-        feature_names (List): list of strings with feature names 
-        feature_importances (List): list with features importances - only available for some classifiers like Random Forest
+        groups: list with data groups for groupKfold cross-validation
       Returns:
-        Prints results on the screen
+        Prints scores on the screen
+        trained_clf: trained and evaluated classifier
   '''    
-  # try on some traning set data
-  some_data = data[:100]
-  some_labels = labels[:100]
+  # tune hyperparameters
+  tuned_clf = GridSearchCV(clf, param_grid, scoring=scoring, refit=refit, cv=splits, return_train_score=True)  
+  tuned_clf.fit(data, labels, groups=groups)
   
-  some_predictions = clf.predict(some_data)
-  print("Predictions:", some_predictions)
-  print("Labels:", some_labels)
+  # evaluate best estimator
+  scores = cross_validate(tuned_clf.best_estimator_, data, labels, scoring=scoring, cv=splits, groups=groups, return_train_score=True)
+
+  # print scores
+  for scr in scoring:
+    print("%s:"%scr, scores["test_%s"%scr])
+    print("mean %s:"%scr, np.mean(scores["test_%s"%scr]))
+    
   
-  # evaluate
-  rnd_mse = mean_squared_error(some_labels, some_predictions)
-  rnd_rmse = np.sqrt(rnd_mse)
-  print("Root mean square error:", rnd_rmse)
-  print("Score:", clf.score(some_data, some_labels))
+  return tuned_clf
   
-  # feature importances: not all classifiers have this
-  if len(feature_importances) > 0:
-    print("Feature importances:")
-    for name, score in zip(feature_names, feature_importances):
-      print(name, score)
+
