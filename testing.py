@@ -52,15 +52,15 @@ def main():
   amp_pred = amp.copy()
   amp_pred[amp<1.5] = 1 # scar
   amp_pred[amp>=1.5] = 0 # healthy
-  amp_fpr, amp_tpr, _ = roc_curve(test_labels, amp_pred)
+  amp_fpr, amp_tpr, _ = roc_curve(train_labels, amp_pred)
 
-  # evaluate models on test set
+  # evaluate models on traning set
   # Random Forest
-  rdn_pred = trained_rnd_clf.predict(test_data)
-  rdn_fpr, rdn_tpr, _ = roc_curve(test_labels, rdn_pred)
+  rdn_pred = trained_rnd_clf.predict(train_data)
+  rdn_fpr, rdn_tpr, _ = roc_curve(train_labels, rdn_pred)
   # SVM 
-  svm_pred = trained_svm_clf.predict(test_data)
-  svm_fpr, svm_tpr, _ = roc_curve(test_labels, svm_pred)
+  svm_pred = trained_svm_clf.predict(train_data)
+  svm_fpr, svm_tpr, _ = roc_curve(train_labels, svm_pred)
 
   fig, axs = plt.subplots(1,1)
   lw = 2
