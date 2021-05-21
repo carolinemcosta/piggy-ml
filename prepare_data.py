@@ -26,7 +26,7 @@ def prepare_pig():
   pig_data = load_pig_data()
   
   # split into training and testing sets
-  train_set, test_set = split_train_test_pig(pig_data, 0.2)
+  train_set, test_set = split_train_test_pig(pig_data, 0.35)
 
   # split into data and labels
   train_data = train_set[["AMP","DVDT","ARI"]]

@@ -16,6 +16,7 @@ def split_train_test(data, test_ratio):
   np.random.seed(42) # set a seed to always get the same split
   shuffled_indices = np.random.permutation(len(data))
   test_set_size = int(len(data)*test_ratio)
+
   
   # split the indices
   test_indices = shuffled_indices[:test_set_size]
@@ -43,6 +44,7 @@ def split_train_test_pig(data, test_ratio):
   np.random.seed(42) # set a seed to always get the same split
   shuffled_indices = np.random.permutation(total_pigs)
   test_set_size = round(total_pigs*test_ratio) # round to nearest integer
+  print(test_set_size)
   
   # split the indices
   test_indices = shuffled_indices[:test_set_size]
