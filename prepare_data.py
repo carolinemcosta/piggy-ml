@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 from get_data import fetch_pig_data
 from get_data import load_pig_data
@@ -77,11 +78,43 @@ def prepare_pig_scaled():
   
   # transformed data to numpy arrays
   prepared_train_labels = np.ravel(train_labels.to_numpy())
-  prepared_train_groups = np.ravel(train_groups.to_numpy())
+  prepared_train_groups = train_groups
 
-  prepared_test_data = np.ravel(test_data.to_numpy())
-  prepared_test_labels = np.ravel(test_labels.to_numpy())    
-  prepared_test_groups = np.ravel(test_groups.to_numpy())
+  #prepared_test_data = np.ravel(test_data.to_numpy())
+  #prepared_test_labels = np.ravel(test_labels.to_numpy())    
+  #prepared_test_groups = np.ravel(test_groups.to_numpy())
   
-  return prepared_train_data, prepared_train_labels, prepared_train_groups, prepared_test_data, prepared_test_labels, prepared_test_groups
+  # plot original and transformed data
+  transformed_data = pd.DataFrame(prepared_train_data, columns=train_data.columns)
+  plot_prepared_scaled(train_data, transformed_data)
+  
+  return prepared_train_data, prepared_train_labels, prepared_train_groups, test_data, test_labels, test_groups
 
+def plot_prepared_scaled(original_data, transformed_data):
+  ''' Plot data before and after scaling
+      
+      Parameters: 
+        original_data: Pandas DataFrame with original data
+        transformed_data: Pandas DataFrame with scaled data
+        
+      Returns:
+        Shows plot on screen
+  '''    
+  
+  features = original_data.columns
+  nfeatures = len(original_data.columns)
+
+  # plot data before and after feature scaling
+  plt.rcParams['font.size'] = '16'
+  fig, axs = plt.subplots(2,nfeatures)
+  
+  for idx in range(nfeatures):  
+    axs[0,idx].hist(original_data[features[idx]], bins=50, color='g')
+    axs[0,0].set_title("Original %s"%features[idx])
+
+    axs[1,idx].hist(transformed_data[features[idx]], bins=50, color='g')
+    axs[1,0].set_title("Transformed %s"%features[idx])
+
+  fig.suptitle("Feature Scaling", fontsize=24)
+  plt.savefig("%s/feature_scaling"%os.getcwd()) # save to current directory
+  plt.close() 
