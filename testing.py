@@ -33,8 +33,7 @@ def main():
   print("\nRANDOM FOREST CLASSIFIER\n")
   rnd_clf = RandomForestClassifier()
 
-  param_grid = [{'n_estimators': [10,100,500], 'max_features': [1,2,3]}, 
-                {'bootstrap':[False], 'n_estimators': [10,100,500], 'max_features': [1,2,3]}]
+  param_grid = [{'n_estimators': [100,500], 'max_features': [1,2,3], 'warm_start':[True, False], 'criterion': ['gini', 'entropy']}]
 
   trained_rnd_clf = evaluate_classifier(rnd_clf, param_grid, scoring, refit, group_splits, train_data, train_labels, train_groups)
 
@@ -42,7 +41,7 @@ def main():
   # SVM classifier
   print("\nSVM CLASSIFIER\n")
   svm_clf = svm.SVC()
-  param_grid = [{'kernel':('linear', 'poly'), 'C':[1, 10, 50]}]
+  param_grid = [{'kernel':('linear', 'poly', 'rbf'), 'C':[0.001, 0.1, 1, 10, 100]}]
 
   trained_svm_clf = evaluate_classifier(svm_clf, param_grid, scoring, refit, group_splits, train_data, train_labels, train_groups)
 
