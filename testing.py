@@ -47,7 +47,7 @@ def main():
 
 
   # build "classifer" using amplitude threshold of 1.5mV
-  amp = test_data["AMP"]
+  amp = train_data[0]
   amp_pred = amp.copy()
   amp_pred[amp<1.5] = 1 # scar
   amp_pred[amp>=1.5] = 0 # healthy

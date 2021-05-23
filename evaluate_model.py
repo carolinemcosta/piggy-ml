@@ -23,6 +23,7 @@ def evaluate_classifier(clf, param_grid, scoring, refit, splits, data, labels, g
   tuned_clf = GridSearchCV(clf, param_grid, scoring=scoring, refit=refit, cv=splits, return_train_score=True)  
   tuned_clf.fit(data, labels, groups=groups)
   
+  print(tuned_clf.best_estimator_)
   # evaluate best estimator
   scores = cross_validate(tuned_clf.best_estimator_, data, labels, scoring=scoring, cv=splits, groups=groups, return_train_score=True)
 
