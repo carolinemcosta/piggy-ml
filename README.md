@@ -12,10 +12,13 @@ The dataset includes several data points from the same individual, thus, the two
 # Training and evaluating the models
 Model hyperparameters were tuned using a grid search and the models were evaluated on the training set using grouped 2-fold cross validation, and accuracy and ROC AUC scoring. 
 
-The SVM classifier has slightly higher mean accuracy (0.83 *versus* 0.78) but smaller AUC (0.57 *versus* 0.58) than the Random Forest on the traning set, compared with an accuracy of 0.63 and an AUC of 0.5 for the amplitude threshold classifier.
+When using cross-validation to evaluate the models, the SVM classifier has slightly higher mean accuracy (0.83 *versus* 0.78) but smaller AUC (0.57 *versus* 0.58) than the Random Forest on the traning set. When using the whole trainig set the SVM classifier has an accuracy of 0.84, against 1.0 of the Random Forest classifier, indicating that the Random Forest classifier is overfitting. This is compared with an accuracy of 0.15 and an AUC of 0.5 for the amplitude threshold classifier. 
 
 # Next steps
 Other morphological features that could improve classification are currently being investigated. Additional data from different studies might also be included. The use of neural networks to classify the electrical signals is also being considered.
+
+# License
+This is a research project using mostly unpublished data
 
 
 
