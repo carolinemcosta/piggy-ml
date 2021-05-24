@@ -47,18 +47,18 @@ def main():
     
   print(trained_rnd_clf)
 
-  ## SVM classifier
-  #modelname = "%s/trained_svm_clf.sav"%os.getcwd()
-  #if not os.path.isfile(modelname):
-    #print("\nSVM CLASSIFIER\n")
-    #svm_clf = svm.SVC()
-    #param_grid = [{'kernel':('linear', 'poly', 'rbf'), 'C':[0.001, 0.1, 1, 10, 100]}]
+  # SVM classifier
+  modelname = "%s/trained_svm_clf.sav"%os.getcwd()
+  if not os.path.isfile(modelname):
+    print("\nSVM CLASSIFIER\n")
+    svm_clf = svm.SVC()
+    param_grid = [{'kernel':('linear', 'poly', 'rbf'), 'C':[0.001, 0.1, 1, 10, 100]}]
 
-    #trained_svm_clf = evaluate_classifier(svm_clf, param_grid, scoring, refit, group_splits, train_data, train_labels, train_groups)
+    trained_svm_clf = evaluate_classifier(svm_clf, param_grid, scoring, refit, group_splits, train_data, train_labels, train_groups)
 
-    #joblib.dump(trained_svm_clf, modelname)
-  #else:
-    #trained_svm_clf = joblib.load(modelname)
+    joblib.dump(trained_svm_clf, modelname)
+  else:
+    trained_svm_clf = joblib.load(modelname)
 
   # build "classifer" using amplitude threshold of 1.5mV
   amp = train_data[:,0]
@@ -73,15 +73,16 @@ def main():
   rdn_pred = trained_rnd_clf.predict(train_data)
   rdn_fpr, rdn_tpr, _ = roc_curve(train_labels, rdn_pred)
   print("Random Forest accuracy:", accuracy_score(train_labels, rdn_pred))
-  ## SVM 
-  #svm_pred = trained_svm_clf.predict(train_data)
-  #svm_fpr, svm_tpr, _ = roc_curve(train_labels, svm_pred)
+  # SVM 
+  svm_pred = trained_svm_clf.predict(train_data)
+  svm_fpr, svm_tpr, _ = roc_curve(train_labels, svm_pred)
+  print("SVM accuracy:", accuracy_score(train_labels, svm_pred))
 
   fig, axs = plt.subplots(1,1)
   lw = 2
   plt.plot(amp_fpr, amp_tpr, color='darkblue', lw=lw, label='Amplitude threshold (area = %0.2f)' % auc(amp_fpr, amp_tpr))
   plt.plot(rdn_fpr, rdn_tpr, color='darkgreen', lw=lw, label='Random Forest (area = %0.2f)' % auc(rdn_fpr, rdn_tpr))
-  #plt.plot(svm_fpr, svm_tpr, color='darkorange', lw=lw, label='SVM (area = %0.2f)' % auc(svm_fpr, svm_tpr))
+  plt.plot(svm_fpr, svm_tpr, color='darkorange', lw=lw, label='SVM (area = %0.2f)' % auc(svm_fpr, svm_tpr))
   plt.plot([0, 1], [0, 1], color='darkgrey', lw=lw, linestyle='--')
   plt.xlim([0.0, 1.0])
   plt.ylim([0.0, 1.05])
