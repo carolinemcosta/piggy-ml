@@ -37,7 +37,7 @@ def main():
     rnd_clf = RandomForestClassifier()
 
     #param_grid = [{'n_estimators': [100,500], 'max_features': [1,2,3], 'warm_start':[True, False], 'criterion': ['gini', 'entropy'], 'class_weight':['balanced', 'balanced_subsample']}]
-    param_grid = [{'n_estimators': [100,500, 800, 1000], 'criterion': ['gini', 'entropy'], 'class_weight':['balanced', 'balanced_subsample']}]
+    param_grid = [{'n_estimators': [100, 500, 800, 1000], 'criterion': ['gini', 'entropy'], 'class_weight':['balanced', 'balanced_subsample']}]
 
     trained_rnd_clf = evaluate_classifier(rnd_clf, param_grid, scoring, refit, group_splits, train_data, train_labels, train_groups)
 
@@ -45,9 +45,7 @@ def main():
   else:
     trained_rnd_clf = joblib.load(modelname)
     
-  print(trained_rnd_clf)
-
-  # SVM classifier
+    # SVM classifier
   modelname = "%s/trained_svm_clf.sav"%os.getcwd()
   if not os.path.isfile(modelname):
     print("\nSVM CLASSIFIER\n")
