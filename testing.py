@@ -6,6 +6,7 @@ import math
 import joblib
 
 from prepare_data import prepare_pig_scaled
+from prepare_data import prepare_pig_binary
 from evaluate_model import evaluate_classifier
 
 from sklearn.ensemble import RandomForestClassifier
@@ -18,9 +19,17 @@ from sklearn.metrics import auc, roc_curve, accuracy_score
 
 def main():
   ''' This is where I test things ''' 
+  # get raw data 
+  raw_train_data, _, _, _, _, _ = prepare_pig_binary()
 
   # get prepared data
   train_data, train_labels, train_groups, test_data, test_labels, test_groups = prepare_pig_scaled()
+  save_train_data = train_data
+  save_test_data = test_data
+  
+  # trying without ARI - no significant difference
+  train_data = save_train_data[:,0:1]
+  test_data = save_test_data[:,0:1]
 
   # split data for grouped k-fold cross validation: 2 splits gives the best AUC and accuracy (tested)
   group_splits = GroupKFold(n_splits=2)
@@ -31,7 +40,7 @@ def main():
   refit = 'roc_auc'
 
   # random forest classifier 
-  modelname = "%s/trained_rnd_clf_balanced_2splits.sav"%os.getcwd()
+  modelname = "%s/trained_rnd_clf_balanced_2splits_noARI.sav"%os.getcwd()
   if not os.path.isfile(modelname):
     print("\nRANDOM FOREST CLASSIFIER\n")
     rnd_clf = RandomForestClassifier()
@@ -46,7 +55,7 @@ def main():
     trained_rnd_clf = joblib.load(modelname)
     
     # SVM classifier
-  modelname = "%s/trained_svm_clf.sav"%os.getcwd()
+  modelname = "%s/trained_svm_clf_noARI.sav"%os.getcwd()
   if not os.path.isfile(modelname):
     print("\nSVM CLASSIFIER\n")
     svm_clf = svm.SVC()
@@ -59,7 +68,7 @@ def main():
     trained_svm_clf = joblib.load(modelname)
 
   # build "classifer" using amplitude threshold of 1.5mV
-  amp = train_data[:,0]
+  amp = raw_train_data[:,0] # train_data[:,0]
   amp_pred = amp.copy()
   amp_pred[amp<1.5] = 1 # scar
   amp_pred[amp>=1.5] = 0 # healthy
