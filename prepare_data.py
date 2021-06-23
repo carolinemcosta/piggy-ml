@@ -80,15 +80,15 @@ def prepare_pig_scaled():
   prepared_train_labels = np.ravel(train_labels.to_numpy())
   prepared_train_groups = train_groups
 
-  #prepared_test_data = np.ravel(test_data.to_numpy())
-  #prepared_test_labels = np.ravel(test_labels.to_numpy())    
-  #prepared_test_groups = np.ravel(test_groups.to_numpy())
+  prepared_test_data = test_data.to_numpy()
+  prepared_test_labels = test_labels.to_numpy()    
+  prepared_test_groups = test_groups.to_numpy()
   
   # plot original and transformed data
   transformed_data = pd.DataFrame(prepared_train_data, columns=train_data.columns)
   plot_prepared_scaled(train_data, transformed_data)
   
-  return prepared_train_data, prepared_train_labels, prepared_train_groups, test_data, test_labels, test_groups
+  return prepared_train_data, prepared_train_labels, prepared_train_groups, prepared_test_data, prepared_test_labels, prepared_test_groups
 
 def plot_prepared_scaled(original_data, transformed_data):
   ''' Plot data before and after scaling
