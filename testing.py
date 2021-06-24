@@ -41,6 +41,7 @@ def main():
 
   # random forest classifier 
   modelname = "%s/trained_rnd_clf_balanced_2splits_noARI.sav"%os.getcwd()
+  #modelname = "%s/trained_rnd_clf_balanced_2splits.sav"%os.getcwd()
   if not os.path.isfile(modelname):
     print("\nRANDOM FOREST CLASSIFIER\n")
     rnd_clf = RandomForestClassifier()
@@ -56,6 +57,7 @@ def main():
     
     # SVM classifier
   modelname = "%s/trained_svm_clf_noARI.sav"%os.getcwd()
+  #modelname = "%s/trained_svm_clf.sav"%os.getcwd()
   if not os.path.isfile(modelname):
     print("\nSVM CLASSIFIER\n")
     svm_clf = svm.SVC()
@@ -68,7 +70,7 @@ def main():
     trained_svm_clf = joblib.load(modelname)
 
   # build "classifer" using amplitude threshold of 1.5mV
-  amp = raw_train_data[:,0] # train_data[:,0]
+  amp = raw_train_data['AMP'] # train_data[:,0]
   amp_pred = amp.copy()
   amp_pred[amp<1.5] = 1 # scar
   amp_pred[amp>=1.5] = 0 # healthy
