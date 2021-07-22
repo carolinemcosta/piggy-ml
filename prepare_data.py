@@ -7,8 +7,7 @@ from get_data import fetch_pig_data
 from get_data import load_pig_data
 from training_set import split_train_test_pig
 
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import QuantileTransformer
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, QuantileTransformer
 
 def prepare_pig():
   ''' Loads data, splits into traning and test sets, and into data, labels, and group names
@@ -73,14 +72,14 @@ def prepare_pig_scaled():
   train_data, train_labels, train_groups, test_data, test_labels, test_groups = prepare_pig_binary()
   
   # transform training data
-  qnorm_data = QuantileTransformer(output_distribution='normal').fit_transform(train_data) # normal distribution
-  prepared_train_data = MinMaxScaler().fit_transform(qnorm_data) # set range to 0..1
-  
+  std_scaler = StandardScaler()
+  prepared_train_data = std_scaler.fit_transform(train_data) 
+
   # transformed data to numpy arrays
   prepared_train_labels = np.ravel(train_labels.to_numpy())
   prepared_train_groups = train_groups
 
-  prepared_test_data = test_data.to_numpy()
+  prepared_test_data = std_scaler.transform(test_data) #test_data.to_numpy()
   prepared_test_labels = test_labels.to_numpy()    
   prepared_test_groups = test_groups.to_numpy()
   
