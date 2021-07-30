@@ -7,18 +7,22 @@ This study uses two additional morphological features of intra-cardiac electrica
 The dataset consists of intra-cardiac electrograms obtained from six pigs, where tissue damaged was artificially induced. An average of 4,000 electrograms were recorded from each pig, thus, the dataset comprises of multiple data points from the same individuals. The signals were pre-processed and analysed to compute features the signal amplitude **(AMP)**, the activation-recovery interval **(ARI)**, and the maximum downslope of the signal **(DVDT)**. Cardiac magnetic resonance images from the same pigs were used to **label** signals or damaged healthy or using image segmetation and registration techniques.
 
 # Preparing the data
-The dataset includes several data points from the same individual, thus, the two pigs were randomnly selected to be the testing set, and data from the remaining pigs was included in the training set.The data was transformed to have a normal distribution and the values were scaled to be within 0 and 1.  
+The dataset includes several data points from the same individual, thus, the two pigs were randomnly selected to be the testing set, and data from the remaining pigs was included in the training set.The data was transformed via standardization.  
 
-# Training and evaluating the models
-Model hyperparameters were tuned using a grid search and the models were evaluated on the training set using grouped 2-fold cross validation and accuracy scoring. 
+# Modelling
 
-The SVM classifier has an accuracy of 0.84 against 1.0 of the Random Forest classifier, indicating that the Random Forest classifier is overfitting. This is compared with an accuracy of 0.4 for the amplitude threshold classifier. 
+Three classifier are currently being investigated: Random Forest, SVM, and XGboost. 
+A dummy classifier that uses only an amplitude threshold, as often done in a clinical setting, was also created.
+
+Model hyperparameters were tuned using a grid search and the models were evaluated on the training set using grouped 2-fold cross validation and F1 scoring. 
+
+Currently, the Random Forest classifier has the highest F1 score on the training set (0.98). All models have a much lower F1 score on the test set, indicating overfitting.  
 
 # Next steps
-Other morphological features that could improve classification are currently being investigated. Additional data from different studies might also be included. The use of neural networks to classify the electrical signals is also being considered.
-
-# Latest update
-The different in ARI between scar and healthy tissue is not statistically significant. After removing the ARI feature from the traning set, the Random Forest and SVM have accuracies of 0.78 and 0.84, respectively. The Random Forest is no longer overfitting, but has now has lower accuracy than SVM model, indicating that the latter is more approapriate for this problem.
+The data is highly heterogeneous, which might explain why the models do not generalize well on the test set. 
+Regularization has improved the models, but the problem persists.
+The use of K-means clusterization as a pre-processing step is being investigated to reduce
+data complexity and improve the models.
 
 # License
 This is a research project using mostly unpublished data
