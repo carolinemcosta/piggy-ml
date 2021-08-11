@@ -5,7 +5,7 @@ from pathlib import Path
 
 # the data directory is hardcoded for now until we are able to make the data public
 ROOT_DIR = "{}/Dropbox/PigEPdata/point-cloud-data/".format(Path.home())
-FILE_NAME = "pigs-for-ml.csv"
+FILE_NAME = "pigs-for-ml-clean.csv"
 ROOT_DATA = ROOT_DIR + FILE_NAME
 LOCAL_PATH = os.path.join("datasets", "pigs")
 

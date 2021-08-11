@@ -38,7 +38,7 @@ def main():
     scoring = 'f1'
 
     # random forest classifier
-    model_name = "{}/trained_rnd_clf_balanced_f1_reg.sav".format(os.getcwd())
+    model_name = "{}/trained_rnd_clf_balanced_f1_reg_clean.sav".format(os.getcwd())
     if not os.path.isfile(model_name):
         print("\nRANDOM FOREST CLASSIFIER\n")
         rnd_clf = RandomForestClassifier(random_state=42, class_weight='balanced')
@@ -50,7 +50,7 @@ def main():
         trained_rnd_clf = joblib.load(model_name)
 
     # SVM classifier
-    model_name = "{}/trained_svm_clf_balanced_f1_reg.sav".format(os.getcwd())
+    model_name = "{}/trained_svm_clf_balanced_f1_reg_clean.sav".format(os.getcwd())
     if not os.path.isfile(model_name):
         print("\nSVM CLASSIFIER\n")
         svm_clf = svm.SVC(random_state=42, kernel='poly', class_weight='balanced')
@@ -62,7 +62,7 @@ def main():
         trained_svm_clf = joblib.load(model_name)
 
     # XGBoost classifier
-    model_name = "{}/trained_xgb_clf_f1_reg.sav".format(os.getcwd())
+    model_name = "{}/trained_xgb_clf_f1_reg_clean.sav".format(os.getcwd())
     if not os.path.isfile(model_name):
         print("\nXGBoost CLASSIFIER\n")
         # scale_pos_weight = np.count_nonzero(train_labels)/np.count_nonzero(~train_labels)

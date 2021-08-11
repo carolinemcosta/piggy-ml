@@ -86,8 +86,8 @@ def prepare_pig_scaled():
     prepared_test_data = std_scaler.transform(test_data)
 
     # transformed data to numpy arrays
-    prepared_train_labels = train_labels.to_numpy(dtype=int)
-    prepared_test_labels = test_labels.to_numpy(dtype=int)
+    prepared_train_labels = np.ravel(train_labels.to_numpy(dtype=int))
+    prepared_test_labels = np.ravel(test_labels.to_numpy(dtype=int))
     prepared_train_groups = train_groups.to_numpy(dtype=int)
     prepared_test_groups = test_groups.to_numpy(dtype=int)
 
